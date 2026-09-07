@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ 'Editar' if producto else 'Agregar' }} Producto - Inventario D1{% endblock %}
+
+{% block content %}
+<h1>{{ 'Editar' if producto else 'Nuevo' }} Producto</h1>
+
+<form method="POST" class="form">
+    <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" value="{{ producto.nombre if producto else '' }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="categoria">Categor&iacute;a:</label>
+        <input type="text" id="categoria" name="categoria" value="{{ producto.categoria if producto else '' }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="precio">Precio:</label>
+        <input type="number" id="precio" name="precio" step="0.01" min="0" value="{{ producto.precio if producto else '' }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="cantidad_stock">Cantidad en Stock:</label>
+        <input type="number" id="cantidad_stock" name="cantidad_stock" min="0" value="{{ producto.cantidad_stock if producto else '' }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="stock_minimo">Stock M&iacute;nimo:</label>
+        <input type="number" id="stock_minimo" name="stock_minimo" min="0" value="{{ producto.stock_minimo if producto else '' }}" required>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">Guardar</button>
+        <a href="{{ url_for('main.listar_productos') }}" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

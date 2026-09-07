@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ producto.nombre }} - Inventario D1{% endblock %}
+
+{% block content %}
+<h1>{{ producto.nombre }}</h1>
+
+<div class="producto-detalle">
+    <div class="info">
+        <p><strong>Categor&iacute;a:</strong> {{ producto.categoria }}</p>
+        <p><strong>Precio:</strong> ${{ "%.2f"|format(producto.precio) }}</p>
+        <p><strong>Stock Actual:</strong> <span class="{{ 'warning' if producto.cantidad_stock <= producto.stock_minimo }}">{{ producto.cantidad_stock }}</span></p>
+        <p><strong>Stock M&iacute;nimo:</strong> {{ producto.stock_minimo }}</p>
+        <p><strong>Fecha de Ingreso:</strong> {{ producto.fecha_ingreso.strftime('%d/%m/%Y') }}</p>
+    </div>
+
+    <div class="acciones">
+        <a href="{{ url_for('main.editar_producto', id=producto.id) }}" class="btn">Editar</a>
+        <a href="{{ url_for('main.registrar_movimiento', producto_id=producto.id) }}" class="btn">Registrar Movimiento</a>
+    </div>
+</div>
+
+<section class="historial">
+    <h2>Historial de Movimientos</h2>
+    {% if movimientos %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mov in movimientos %}
+                <tr>
+                    <td>{{ mov.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td class="{{ 'entrada' if mov.tipo == 'entrada' else 'salida' }}">
+                        {{ mov.tipo|capitalize }}
+                    </td>
+                    <td>{{ mov.cantidad }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No hay movimientos para este producto.</p>
+    {% endif %}
+</section>
+
+<a href="{{ url_for('main.listar_productos') }}" class="btn btn-secondary">Volver</a>
+{% endblock %}

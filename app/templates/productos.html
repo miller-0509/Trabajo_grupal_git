@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Productos - Inventario D1{% endblock %}
+
+{% block content %}
+<h1>Productos</h1>
+
+<div class="actions">
+    <a href="{{ url_for('main.agregar_producto') }}" class="btn">+ Nuevo Producto</a>
+</div>
+
+{% if productos %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Categor&iacute;a</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Stock M&iacute;nimo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr class="{{ 'stock-bajo' if producto.cantidad_stock <= producto.stock_minimo }}">
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.categoria }}</td>
+                <td>${{ "%.2f"|format(producto.precio) }}</td>
+                <td>{{ producto.cantidad_stock }}</td>
+                <td>{{ producto.stock_minimo }}</td>
+                <td class="acciones">
+                    <a href="{{ url_for('main.detalle_producto', id=producto.id) }}" class="btn-small">Ver</a>
+                    <a href="{{ url_for('main.editar_producto', id=producto.id) }}" class="btn-small">Editar</a>
+                    <form method="POST" action="{{ url_for('main.eliminar_producto', id=producto.id) }}" style="display:inline;">
+                        <button type="submit" class="btn-small btn-danger" onclick="return confirm('Eliminar este producto?')">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="empty">No hay productos registrados. <a href="{{ url_for('main.agregar_producto') }}">Agregar uno</a></p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Inventario D1{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+<div class="dashboard">
+    <div class="card">
+        <h2>Total Productos</h2>
+        <p class="number">{{ total_productos }}</p>
+    </div>
+
+    <div class="card">
+        <h2>Stock Bajo</h2>
+        <p class="number warning">{{ stock_bajo }}</p>
+    </div>
+
+    <div class="card">
+        <h2>Movimientos Hoy</h2>
+        <p class="number">{{ movimientos_hoy }}</p>
+    </div>
+</div>
+
+<section class="recent-movements">
+    <h2>&Uacute;ltimos Movimientos</h2>
+    {% if movimientos_recientes %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Producto</th>
+                    <th>Tipo</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mov in movimientos_recientes %}
+                <tr>
+                    <td>{{ mov.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>{{ mov.producto.nombre }}</td>
+                    <td class="{{ 'entrada' if mov.tipo == 'entrada' else 'salida' }}">
+                        {{ mov.tipo|capitalize }}
+                    </td>
+                    <td>{{ mov.cantidad }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('main.listar_movimientos') }}" class="btn">Ver todos</a>
+    {% else %}
+        <p>No hay movimientos registrados.</p>
+    {% endif %}
+</section>
+{% endblock %}

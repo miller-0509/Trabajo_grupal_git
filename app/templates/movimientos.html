@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Movimientos - Inventario D1{% endblock %}
+
+{% block content %}
+<h1>Movimientos de Inventario</h1>
+
+<div class="actions">
+    <a href="{{ url_for('main.registrar_movimiento') }}" class="btn">+ Nuevo Movimiento</a>
+</div>
+
+{% if movimientos %}
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Producto</th>
+                <th>Tipo</th>
+                <th>Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mov in movimientos %}
+            <tr>
+                <td>{{ mov.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ mov.producto.nombre }}</td>
+                <td class="{{ 'entrada' if mov.tipo == 'entrada' else 'salida' }}">
+                    {{ mov.tipo|capitalize }}
+                </td>
+                <td>{{ mov.cantidad }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="empty">No hay movimientos registrados.</p>
+{% endif %}
+{% endblock %}
