@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Error del Servidor - Inventario D1{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <h1>500</h1>
+    <h2>Error Interno del Servidor</h2>
+    <p>Ocurri&oacute; un error inesperado. Por favor, int&eacute;ntalo de nuevo m&aacute;s tarde.</p>
+    <div class="error-actions">
+        <a href="{{ url_for('main.index') }}" class="btn">Ir al Dashboard</a>
+    </div>
+</div>
+{% endblock %}

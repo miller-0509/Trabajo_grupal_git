@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Usuarios - Inventario D1{% endblock %}
+
+{% block content %}
+<h1>Gestión de Usuarios</h1>
+
+<div class="actions">
+    <a href="{{ url_for('main.registro') }}" class="btn" id="btn-nuevo-usuario">+ Nuevo Usuario</a>
+</div>
+
+{% if usuarios %}
+    <table id="tabla-usuarios">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.id }}</td>
+                <td>{{ usuario.username }}</td>
+                <td>
+                    <span class="badge badge-{{ usuario.rol }}">{{ usuario.rol|capitalize }}</span>
+                </td>
+                <td class="acciones">
+                    <a href="{{ url_for('main.editar_usuario', id=usuario.id) }}" class="btn-small" id="btn-editar-usuario-{{ usuario.id }}">Editar</a>
+                    {% if usuario.id != session.get('usuario_id') %}
+                    <form method="POST" action="{{ url_for('main.eliminar_usuario', id=usuario.id) }}" style="display:inline;">
+                        <button type="submit" class="btn-small btn-danger" id="btn-eliminar-usuario-{{ usuario.id }}"
+                                onclick="return confirm('¿Estás seguro de eliminar al usuario {{ usuario.username }}?')">
+                            Eliminar
+                        </button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="empty">No hay usuarios registrados. <a href="{{ url_for('main.registro') }}">Crear uno</a></p>
+{% endif %}
+{% endblock %}

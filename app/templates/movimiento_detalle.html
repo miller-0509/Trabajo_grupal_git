@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle Movimiento - Inventario D1{% endblock %}
+
+{% block content %}
+<h1>Detalle del Movimiento #{{ movimiento.id }}</h1>
+
+<div class="producto-detalle">
+    <div class="info">
+        <p><strong>ID:</strong> {{ movimiento.id }}</p>
+        <p><strong>Producto:</strong>
+            <a href="{{ url_for('main.detalle_producto', id=movimiento.producto.id) }}">
+                {{ movimiento.producto.nombre }}
+            </a>
+        </p>
+        <p><strong>Tipo:</strong>
+            <span class="{{ 'entrada' if movimiento.tipo == 'entrada' else 'salida' }}">
+                {{ movimiento.tipo|capitalize }}
+            </span>
+        </p>
+        <p><strong>Cantidad:</strong> {{ movimiento.cantidad }} unidades</p>
+        <p><strong>Fecha:</strong> {{ movimiento.fecha.strftime('%d/%m/%Y %H:%M:%S') }}</p>
+        <p><strong>Stock actual del producto:</strong>
+            <span class="{{ 'warning' if movimiento.producto.esta_bajo_stock() }}">
+                {{ movimiento.producto.cantidad_stock }} unidades
+            </span>
+        </p>
+    </div>
+
+    <div class="acciones">
+        <form method="POST" action="{{ url_for('main.eliminar_movimiento', id=movimiento.id) }}" style="display:inline;">
+            <button type="submit" class="btn btn-danger" id="btn-eliminar-movimiento"
+                    onclick="return confirm('¿Eliminar este movimiento? Se revertirá el efecto en el stock del producto.')">
+                Eliminar Movimiento
+            </button>
+        </form>
+    </div>
+</div>
+
+<a href="{{ url_for('main.listar_movimientos') }}" class="btn btn-secondary">Volver a Movimientos</a>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Reportes - Inventario D1{% endblock %}
+
+{% block content %}
+<h1>Reportes del Inventario</h1>
+
+<div class="dashboard">
+    <div class="card">
+        <h2>Total Productos</h2>
+        <p class="number">{{ total_productos }}</p>
+    </div>
+
+    <div class="card">
+        <h2>Total Movimientos</h2>
+        <p class="number">{{ total_movimientos }}</p>
+    </div>
+
+    <div class="card">
+        <h2>Movimientos Hoy</h2>
+        <p class="number">{{ movimientos_hoy }}</p>
+    </div>
+
+    <div class="card">
+        <h2>Valor del Inventario</h2>
+        <p class="number">${{ "%.2f"|format(valor_inventario) }}</p>
+    </div>
+
+    <div class="card">
+        <h2>Total Entradas</h2>
+        <p class="number entrada">{{ total_entradas }}</p>
+    </div>
+
+    <div class="card">
+        <h2>Total Salidas</h2>
+        <p class="number salida">{{ total_salidas }}</p>
+    </div>
+</div>
+
+<section class="reporte-seccion">
+    <h2>Productos con Stock Bajo ({{ productos_stock_bajo|length }})</h2>
+    {% if productos_stock_bajo %}
+        <table id="tabla-reporte-stock-bajo">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Categor&iacute;a</th>
+                    <th>Stock Actual</th>
+                    <th>Stock M&iacute;nimo</th>
+                    <th>Acci&oacute;n</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos_stock_bajo %}
+                <tr class="stock-bajo">
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.categoria or 'Sin categoría' }}</td>
+                    <td class="warning"><strong>{{ producto.cantidad_stock }}</strong></td>
+                    <td>{{ producto.stock_minimo }}</td>
+                    <td>
+                        <a href="{{ url_for('main.registrar_movimiento', producto_id=producto.id) }}"
+                           class="btn-small">Reabastecer</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="empty success-message">✓ No hay productos con stock bajo.</p>
+    {% endif %}
+</section>
+
+<section class="reporte-seccion">
+    <h2>Top 5 Productos M&aacute;s Movidos</h2>
+    {% if productos_mas_movidos %}
+        <table id="tabla-reporte-top-productos">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Producto</th>
+                    <th>Total Movimientos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for nombre, total in productos_mas_movidos %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ nombre }}</td>
+                    <td><strong>{{ total }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="empty">No hay datos suficientes para este reporte.</p>
+    {% endif %}
+</section>
+
+<section class="reporte-seccion">
+    <h2>Distribuci&oacute;n por Categor&iacute;as</h2>
+    {% if categorias %}
+        <table id="tabla-reporte-categorias">
+            <thead>
+                <tr>
+                    <th>Categor&iacute;a</th>
+                    <th>Cantidad de Productos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for categoria, total in categorias %}
+                <tr>
+                    <td>{{ categoria or 'Sin categoría' }}</td>
+                    <td><strong>{{ total }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="empty">No hay datos suficientes para este reporte.</p>
+    {% endif %}
+</section>
+{% endblock %}

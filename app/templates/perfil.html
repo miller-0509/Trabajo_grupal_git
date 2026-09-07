@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Perfil - Inventario D1{% endblock %}
+
+{% block content %}
+<h1>Mi Perfil</h1>
+
+<div class="producto-detalle">
+    <div class="info">
+        <p><strong>Usuario:</strong> {{ usuario.username }}</p>
+        <p><strong>Rol:</strong> <span class="badge badge-{{ usuario.rol }}">{{ usuario.rol|capitalize }}</span></p>
+    </div>
+</div>
+
+<h2>Cambiar Contraseña</h2>
+
+<form method="POST" class="form" id="perfil-form">
+    <div class="form-group">
+        <label for="password_actual">Contraseña Actual:</label>
+        <input type="password" id="password_actual" name="password_actual"
+               placeholder="Ingresa tu contraseña actual" required
+               autocomplete="current-password">
+    </div>
+
+    <div class="form-group">
+        <label for="password">Nueva Contraseña:</label>
+        <input type="password" id="password" name="password"
+               placeholder="Mínimo 6 caracteres" required
+               minlength="6" autocomplete="new-password">
+    </div>
+
+    <div class="form-group">
+        <label for="confirmar_password">Confirmar Nueva Contraseña:</label>
+        <input type="password" id="confirmar_password" name="confirmar_password"
+               placeholder="Repite la nueva contraseña" required
+               minlength="6" autocomplete="new-password">
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn" id="btn-cambiar-password">Cambiar Contraseña</button>
+        <a href="{{ url_for('main.index') }}" class="btn btn-secondary">Volver al Dashboard</a>
+    </div>
+</form>
+{% endblock %}

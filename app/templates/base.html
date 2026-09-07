@@ -9,21 +9,31 @@
 <body>
     <header>
         <nav>
-            <div class="logo">Inventario D1</div>
+            <div class="logo"><a href="{{ url_for('main.index') }}" style="color: inherit; text-decoration: none;">Inventario D1</a></div>
             <ul>
-                <li><a href="{{ url_for('main.index') }}">Dashboard</a></li>
-                <li><a href="{{ url_for('main.listar_productos') }}">Productos</a></li>
-                <li><a href="{{ url_for('main.listar_movimientos') }}">Movimientos</a></li>
+                {% if session.get('usuario_id') %}
+                    <li><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('main.listar_productos') }}">Productos</a></li>
+                    <li><a href="{{ url_for('main.listar_movimientos') }}">Movimientos</a></li>
+                    <li><a href="{{ url_for('main.reportes') }}">Reportes</a></li>
+                    {% if session.get('usuario_rol') == 'admin' %}
+                        <li><a href="{{ url_for('main.listar_usuarios') }}">Usuarios</a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('main.perfil') }}">Perfil ({{ session.get('usuario_username') }})</a></li>
+                    <li><a href="{{ url_for('main.logout') }}">Cerrar Sesión</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('main.login') }}">Iniciar Sesión</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
 
     <main>
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <div class="flash-messages">
-                    {% for message in messages %}
-                        <div class="alert">{{ message }}</div>
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category != 'message' else 'info' }}">{{ message }}</div>
                     {% endfor %}
                 </div>
             {% endif %}

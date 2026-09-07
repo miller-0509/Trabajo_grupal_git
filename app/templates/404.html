@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Página No Encontrada - Inventario D1{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <h1>404</h1>
+    <h2>P&aacute;gina No Encontrada</h2>
+    <p>La página que buscas no existe o fue movida.</p>
+    <div class="error-actions">
+        <a href="{{ url_for('main.index') }}" class="btn">Ir al Dashboard</a>
+        <a href="{{ url_for('main.listar_productos') }}" class="btn btn-secondary">Ver Productos</a>
+    </div>
+</div>
+{% endblock %}

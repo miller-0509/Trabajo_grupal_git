@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Buscar Productos - Inventario D1{% endblock %}
+
+{% block content %}
+<h1>Buscar Productos</h1>
+
+<div class="filtros">
+    <form method="GET" action="{{ url_for('main.buscar_productos') }}" class="form form-inline" id="buscar-form">
+        <div class="form-group">
+            <label for="q">Buscar:</label>
+            <input type="text" id="q" name="q" value="{{ query }}"
+                   placeholder="Nombre o categoría del producto...">
+        </div>
+
+        <div class="form-group">
+            <label for="categoria">Categoría:</label>
+            <select id="categoria" name="categoria">
+                <option value="">Todas las categorías</option>
+                {% for cat in categorias %}
+                <option value="{{ cat }}" {{ 'selected' if categoria_seleccionada == cat }}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-actions-inline">
+            <button type="submit" class="btn" id="btn-buscar">Buscar</button>
+            <a href="{{ url_for('main.buscar_productos') }}" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+</div>
+
+{% if query or categoria_seleccionada %}
+<p class="resultados-info">
+    Se encontraron <strong>{{ productos|length }}</strong> resultado(s)
+    {% if query %} para "<em>{{ query }}</em>"{% endif %}
+    {% if categoria_seleccionada %} en la categoría "<em>{{ categoria_seleccionada }}</em>"{% endif %}
+</p>
+{% endif %}
+
+{% if productos %}
+    <table id="tabla-busqueda">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Categor&iacute;a</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Stock M&iacute;nimo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr class="{{ 'stock-bajo' if producto.cantidad_stock <= producto.stock_minimo }}">
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.categoria or 'Sin categoría' }}</td>
+                <td>${{ "%.2f"|format(producto.precio) }}</td>
+                <td>{{ producto.cantidad_stock }}</td>
+                <td>{{ producto.stock_minimo }}</td>
+                <td class="acciones">
+                    <a href="{{ url_for('main.detalle_producto', id=producto.id) }}" class="btn-small">Ver</a>
+                    <a href="{{ url_for('main.editar_producto', id=producto.id) }}" class="btn-small">Editar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% elif query or categoria_seleccionada %}
+    <p class="empty">No se encontraron productos con los criterios de búsqueda.</p>
+{% else %}
+    <p class="empty">Ingresa un término de búsqueda o selecciona una categoría.</p>
+{% endif %}
+
+<a href="{{ url_for('main.listar_productos') }}" class="btn btn-secondary">Volver a Productos</a>
+{% endblock %}

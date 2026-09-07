@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Stock Bajo - Inventario D1{% endblock %}
+
+{% block content %}
+<h1>⚠ Productos con Stock Bajo</h1>
+
+<p class="section-description">
+    Productos cuyo stock actual es igual o menor al stock mínimo configurado.
+</p>
+
+{% if productos %}
+    <table id="tabla-stock-bajo">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Categor&iacute;a</th>
+                <th>Stock Actual</th>
+                <th>Stock M&iacute;nimo</th>
+                <th>Diferencia</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr class="stock-bajo">
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.categoria or 'Sin categoría' }}</td>
+                <td class="warning"><strong>{{ producto.cantidad_stock }}</strong></td>
+                <td>{{ producto.stock_minimo }}</td>
+                <td class="warning">
+                    {{ producto.cantidad_stock - producto.stock_minimo }}
+                </td>
+                <td class="acciones">
+                    <a href="{{ url_for('main.registrar_movimiento', producto_id=producto.id) }}"
+                       class="btn-small" id="btn-reabastecer-{{ producto.id }}">Reabastecer</a>
+                    <a href="{{ url_for('main.detalle_producto', id=producto.id) }}"
+                       class="btn-small">Ver Detalle</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p class="resultados-info">
+        Total: <strong>{{ productos|length }}</strong> producto(s) con stock bajo.
+    </p>
+{% else %}
+    <p class="empty success-message">
+        ✓ Todos los productos tienen stock suficiente. ¡No hay alertas!
+    </p>
+{% endif %}
+
+<a href="{{ url_for('main.listar_productos') }}" class="btn btn-secondary">Volver a Productos</a>
+{% endblock %}
