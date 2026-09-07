@@ -27,6 +27,10 @@ class Usuario(db.Model):
         """Verifica si la contraseña coincide con el hash almacenado."""
         return check_password_hash(self.password, password_text)
 
+    def es_admin(self):
+        """Indica si el usuario tiene rol de administrador."""
+        return self.rol == 'admin'
+
     def __repr__(self):
         return f'<Usuario {self.username} (Rol: {self.rol})>'
 
@@ -64,6 +68,18 @@ class Producto(db.Model):
         """Determina si el producto está en o por debajo de su stock mínimo."""
         return self.cantidad_stock <= self.stock_minimo
 
+    def estado_stock(self):
+        """Devuelve el estado en texto del stock."""
+        if self.cantidad_stock == 0:
+            return 'Agotado'
+        elif self.cantidad_stock <= self.stock_minimo:
+            return 'Bajo Stock'
+        return 'Normal'
+
+    def valor_total(self):
+        """Calcula el valor monetario total del inventario de este producto."""
+        return self.precio * self.cantidad_stock
+
     def __repr__(self):
         return f'<Producto {self.nombre} (Stock: {self.cantidad_stock}, Precio: ${self.precio})>'
 
@@ -90,4 +106,3 @@ class Movimiento(db.Model):
 
     def __repr__(self):
         return f'<Movimiento {self.tipo} - {self.cantidad} unidades (Producto ID: {self.producto_id})>'
-

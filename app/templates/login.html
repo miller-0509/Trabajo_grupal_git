@@ -8,6 +8,19 @@
         <h1>Iniciar Sesión</h1>
         <p class="auth-subtitle">Ingresa tus credenciales para acceder al sistema</p>
 
+        <!-- Botones de Autollenado por Rol -->
+        <div class="autofill-box">
+            <span class="autofill-title">⚡ Autollenar credenciales de prueba:</span>
+            <div class="autofill-buttons">
+                <button type="button" class="btn-autofill btn-autofill-admin" onclick="llenarCredenciales('admin', 'admin123')">
+                    👑 Rol Administrador
+                </button>
+                <button type="button" class="btn-autofill btn-autofill-empleado" onclick="llenarCredenciales('empleado', 'empleado123')">
+                    👤 Rol Empleado
+                </button>
+            </div>
+        </div>
+
         <form method="POST" class="form" id="login-form">
             <div class="form-group">
                 <label for="username">Usuario:</label>
@@ -27,4 +40,17 @@
         </form>
     </div>
 </div>
+
+<script>
+function llenarCredenciales(usuario, clave) {
+    const userField = document.getElementById('username');
+    const passField = document.getElementById('password');
+    if (userField && passField) {
+        userField.value = usuario;
+        passField.value = clave;
+        // Efecto de enfoque visual
+        userField.focus();
+    }
+}
+</script>
 {% endblock %}
