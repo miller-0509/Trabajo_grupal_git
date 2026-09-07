@@ -10,6 +10,15 @@ class Usuario(db.Model):
     password = db.Column(db.String(255), nullable=False)
     rol = db.Column(db.String(50), default='empleado', nullable=False)
 
+    def __init__(self, username=None, password=None, rol='empleado', **kwargs):
+        super().__init__(**kwargs)
+        if username is not None:
+            self.username = username
+        if password is not None:
+            self.password = password
+        if rol is not None:
+            self.rol = rol
+
     def set_password(self, password_text):
         """Genera el hash de la contraseña y lo almacena."""
         self.password = generate_password_hash(password_text)
@@ -36,6 +45,21 @@ class Producto(db.Model):
     # Relación con Movimiento
     movimientos = db.relationship('Movimiento', backref='producto', lazy=True, cascade='all, delete-orphan')
 
+    def __init__(self, nombre=None, categoria=None, precio=None, cantidad_stock=0, stock_minimo=5, fecha_ingreso=None, **kwargs):
+        super().__init__(**kwargs)
+        if nombre is not None:
+            self.nombre = nombre
+        if categoria is not None:
+            self.categoria = categoria
+        if precio is not None:
+            self.precio = precio
+        if cantidad_stock is not None:
+            self.cantidad_stock = cantidad_stock
+        if stock_minimo is not None:
+            self.stock_minimo = stock_minimo
+        if fecha_ingreso is not None:
+            self.fecha_ingreso = fecha_ingreso
+
     def esta_bajo_stock(self):
         """Determina si el producto está en o por debajo de su stock mínimo."""
         return self.cantidad_stock <= self.stock_minimo
@@ -53,5 +77,17 @@ class Movimiento(db.Model):
     cantidad = db.Column(db.Integer, nullable=False)
     fecha = db.Column(db.DateTime, default=datetime.utcnow)
 
+    def __init__(self, producto_id=None, tipo=None, cantidad=None, fecha=None, **kwargs):
+        super().__init__(**kwargs)
+        if producto_id is not None:
+            self.producto_id = producto_id
+        if tipo is not None:
+            self.tipo = tipo
+        if cantidad is not None:
+            self.cantidad = cantidad
+        if fecha is not None:
+            self.fecha = fecha
+
     def __repr__(self):
         return f'<Movimiento {self.tipo} - {self.cantidad} unidades (Producto ID: {self.producto_id})>'
+
